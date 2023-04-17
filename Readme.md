@@ -57,4 +57,5 @@ Jenkins Default Port = 8080
 
 # jenkins Dashboard Overview
 
-![jenkins-overview](https://user-images.githubusercontent.com/101070055/232628486-5f31a47d-0402-4f04-9988-c9fafb5d35f3.png)
+![over-view-2](https://user-images.githubusercontent.com/101070055/232629066-d9458cfb-38d8-44cc-b56c-5776debec922.png)
+
