@@ -8,9 +8,7 @@ The main focus of Jenkins is to provide an easy-to-use and extensible automation
 
 ## Jenkins CICD.
 
-![jenkins](https://user-images.githubusercontent.com/101070055/232617297-f6da8b83-06cd-4163-8045-030d1155c6ba.jpeg)
-
-![cicd](https://user-images.githubusercontent.com/101070055/232618178-872eb4fd-eba6-4ba9-9c6f-ad3572a3e46f.jpeg)
+![jenkins](https://user-images.githubusercontent.com/101070055/232617297-f6da8b83-06cd-4163-8045-030d1155c6ba.jpeg)                                                                                                                                                                                                                                                                                                                      ![cicd](https://user-images.githubusercontent.com/101070055/232618178-872eb4fd-eba6-4ba9-9c6f-ad3572a3e46f.jpeg)
 
 Jenkins CICD (Continuous Integration and Continuous Delivery) Pipelines are a set of automated processes used to build, test, and deploy applications. These pipelines are triggered by changes made to the source code and produce a set of instructions that help developers understand the exact steps necessary to get their applications ready for production.
 
@@ -57,3 +55,6 @@ Download jenkins required package and its dependencies with curl command
 
 Jenkins Default Port = 8080
 
+# jenkins Dashboard Overview
+
+![jenkins-overview](https://user-images.githubusercontent.com/101070055/232628486-5f31a47d-0402-4f04-9988-c9fafb5d35f3.png)
