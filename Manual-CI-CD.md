@@ -148,5 +148,5 @@ NOTE: As DevOps Engineer, it is of best practices to understand the kind of lang
 
 - The image is now available on aws ecr
 
-![push-image](https://user-images.githubusercontent.com/101070055/233757170-4460f8e3-9789-4c88-b841-231ae07327ae.png)
+![image-ecr](https://user-images.githubusercontent.com/101070055/233757646-be75c8cf-e33f-410d-b946-d4584fdb7764.png)
 
