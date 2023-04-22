@@ -179,6 +179,8 @@ NOTE: As DevOps Engineer, it is of best practices to understand the kind of lang
            
     This command will pull the image from AWS ECR into the CD Server, docker images >> will list the pulled image available on the server
 
+![image-pull](https://user-images.githubusercontent.com/101070055/233778101-32dfc2d2-576c-45b8-a8c7-ac463112ba8e.png)
+
 - Run the image as conatainer
 
             docker run --detach --name webapp-release -p 8080:8080 700930115870.dkr.ecr.us-east-1.amazonaws.com/boot-app:latest
