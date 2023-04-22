@@ -150,3 +150,53 @@ NOTE: As DevOps Engineer, it is of best practices to understand the kind of lang
 
 ![image-ecr](https://user-images.githubusercontent.com/101070055/233757646-be75c8cf-e33f-410d-b946-d4584fdb7764.png)
 
+# Step 6 (Deploy the image to CD-Server)
+
+- The image is available on aws ecr, at this point, they are many ways to run the software on test and production environment.
+
+            ECS deployment
+            EKS Deployment
+            Manual docker deployment
+            
+- For simplicity, i will create a CD-server, pull the image from aws ecr and run the image as container on CD-Server
+    
+            I will use Aws EC2 ubuntu instance "type=t3-medium"
+            Update and upgrade the server
+            Install Docker
+            Start docker service
+            Install awscli
+            Use IAM Role or user to authenticate the server for ecr adminsistrative role.
+
+- Authenticate the Server to pull Image on AWS ECR
+
+            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 700930115870.dkr.ecr.us-east-1.amazonaws.com
+            
+![pull-ecr](https://user-images.githubusercontent.com/101070055/233776920-03bee362-6ecf-4e65-920b-bc8faea0ed2f.png)
+            
+- Pull the image.
+
+           docker pull 700930115870.dkr.ecr.us-east-1.amazonaws.com/boot-app 
+           
+    This command will pull the image from AWS ECR into the CD Server, docker images >> will list the pulled image available on the server
+
+- Run the image as conatainer
+
+            docker run --detach --name webapp-release -p 8080:8080 700930115870.dkr.ecr.us-east-1.amazonaws.com/boot-app:latest
+
+This will create a conatiner runtime environment of the software .
+
+![runtime-env](https://user-images.githubusercontent.com/101070055/233777604-5506b23a-2f26-4556-8669-2e764120fa7d.png)
+
+By default, the application is reachable on port 8080, in order to allow internet traffic, or users to access the software or application, this port must be opened. 
+
+       http://<CD-Server-IP>:8080
+       
+![app-home](https://user-images.githubusercontent.com/101070055/233777875-e6418479-b227-49e3-a81b-12bff07e9528.png)
+
+I can confirm the software is reachable, 
+
+Manual CICD Process completed >>>>>>>>>>>> More CICD complex project next with Jenkins >>>>>>>>>>>>>>>>>>>>
+
+For any enquiry, am available on >>
+
+Email: Mmadubugwuchibuife@gmail.com 
