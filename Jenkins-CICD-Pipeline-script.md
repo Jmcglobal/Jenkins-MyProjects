@@ -123,7 +123,54 @@ I will use Sonarqube docker image here
 
 ![sonar-plugin](https://user-images.githubusercontent.com/101070055/233815688-7e936888-be0e-4b72-91c5-89f845a2e4bc.png)
 
-- Add Credentials 
+- Add SonarQube Credentials on Jenkins
 
 ![sonar-credential](https://user-images.githubusercontent.com/101070055/233815797-727fb40b-2097-498d-81fc-15f2a5f20337.png)
 
+Under secret, paste the generated token, and token name as ID, select secret text under kind
+
+- Add Sonarqube server on jenkins
+
+![sonar-server](https://user-images.githubusercontent.com/101070055/233816149-24556960-fd9b-44df-9582-91e2192fc565.png)
+
+- Add pipeline for sonarqube
+
+                        stage ("SonarQube Quality code check analysis") {
+                            steps {
+                                script {
+                                withSonarQubeEnv (installationName: 'Sonarqube', credentialsId: 'token') {
+                                sh 'mvn sonar:sonar'
+                                }
+                                }
+                            }
+                        }
+
+At this stage, i have added, sonarqube pipeline to run quality check sonarqube server ..
+
+![sonar-success](https://user-images.githubusercontent.com/101070055/233816852-df5959f4-f044-414e-8dd0-295fdae65068.png)
+
+- Adding quality gate pipeline to determine success or failed check
+
+                        stage ("SonarQube Quality code check analysis") {
+                            steps {
+                                script {
+                                withSonarQubeEnv (installationName: 'Sonarqube', credentialsId: 'token') {
+                                sh 'mvn sonar:sonar'
+                                }
+                                timeout(time: 1, unit: 'HOURS') {
+                                    def qg = waitForQualityGate()
+                                    if (qg.status == 'Ok') {
+                                        success 'Quality gate passed: $(qg.status)'
+                                    } 
+                                }
+                                }
+                            }
+                        }
+
+- Add Webhook on sonarqube
+
+Click on the administration, select webhook
+
+![webhook](https://user-images.githubusercontent.com/101070055/233817596-aef06354-86cd-438e-8518-21519e23bb10.png)
+
+![quality-gate-success](https://user-images.githubusercontent.com/101070055/233819369-35a68bf7-9d1f-4edf-8274-45a9992d29f4.png)
