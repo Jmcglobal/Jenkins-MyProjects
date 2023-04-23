@@ -216,8 +216,38 @@ Click on the administration, select webhook
 - Add AWS credentials on jenkins
         
  ![jenkins-access](https://user-images.githubusercontent.com/101070055/233821628-d4574af9-e6fd-43df-8287-07c10c7f34e1.png)
+ 
+ - Add the pipeline script
+
+                        stage ("Push Image to AWS ECR") {
+                            steps {
+                                script {
+                                docker.withRegistry ('http://' + registry, "ecr:us-east-1:" + registryCredential) {
+                                dockerImage.push()
+                                }
+                                }
+                            }
+                        }
       
 ![push-to-ecr](https://user-images.githubusercontent.com/101070055/233821787-5f36fb87-6cf0-48d0-b223-1e900122c5b2.png)
 
 ![aws-image-confirmed](https://user-images.githubusercontent.com/101070055/233821838-bc6cf8f0-360b-4f81-8e6b-1a098a3a36f1.png)
+
+# Configure Email notification with SES
+
+- Create identity on Amazon AWS, and verify it
+
+![ses-verify](https://user-images.githubusercontent.com/101070055/233822478-6b957b67-6501-4209-8012-6cd797c34102.png)
+
+- Create SMTP credentials
+
+![smtp-cred](https://user-images.githubusercontent.com/101070055/233822520-521ac3f4-a3fd-48af-8136-edbb6313c436.png)
+
+Note SMTP credentials
+
+![note-smtp-crede](https://user-images.githubusercontent.com/101070055/233822664-89f7d28d-7db7-4ae4-8b38-b6d85ba795ca.png)
+
+- Integrate SMTP on jenkins
+
+
 
