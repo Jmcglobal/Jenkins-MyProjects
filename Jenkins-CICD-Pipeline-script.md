@@ -174,3 +174,50 @@ Click on the administration, select webhook
 ![webhook](https://user-images.githubusercontent.com/101070055/233817596-aef06354-86cd-438e-8518-21519e23bb10.png)
 
 ![quality-gate-success](https://user-images.githubusercontent.com/101070055/233819369-35a68bf7-9d1f-4edf-8274-45a9992d29f4.png)
+
+
+
+- Add PipeLine to build docker image
+
+               Add Plugin  >> Docker PipeLine
+               
+   Add environment variable after agent any
+   
+               environment {
+                registry = '700930115870.dkr.ecr.us-east-1.amazonaws.com/jmcglobal'
+                registryCredential = 'Jenkins-ECR'
+                dockerImage = ''
+            }
+
+  Add Stage for buildiong the image      
+  
+                  stage ("Build the image") {
+                    steps {
+                        script {
+                        dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                        }
+                    }
+                }
+                
+                
+- Add Plugins and push the image to AWS ECR.
+
+- Install plugin
+
+        CloudBees AWS CredentialsVersion
+        Amazon ECRVersion
+        Docker Plugin
+        Docker PipeLine
+       
+- Create One AWS User with ECR administrative role
+
+    Create Access-key for the user
+  
+- Add AWS credentials on jenkins
+        
+ ![jenkins-access](https://user-images.githubusercontent.com/101070055/233821628-d4574af9-e6fd-43df-8287-07c10c7f34e1.png)
+      
+![push-to-ecr](https://user-images.githubusercontent.com/101070055/233821787-5f36fb87-6cf0-48d0-b223-1e900122c5b2.png)
+
+![aws-image-confirmed](https://user-images.githubusercontent.com/101070055/233821838-bc6cf8f0-360b-4f81-8e6b-1a098a3a36f1.png)
+
