@@ -48,3 +48,11 @@ It can also be used to define parameters that can be used to control the executi
 
         sudo apt update -y
         sudo apt install jenkins -y
+
+- To Access jenkins GUI
+
+               http://<Server-IP>:8080
+              
+ Follow the password guid to get default password, install suggested plugins, enter details and access jenkins dashboard.
+ 
+ ![jenkins-dash](https://user-images.githubusercontent.com/101070055/233812661-f0c2bcf0-1f7d-451b-b987-7ade0e838c10.png)
