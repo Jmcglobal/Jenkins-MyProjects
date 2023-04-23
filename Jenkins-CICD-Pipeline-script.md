@@ -249,5 +249,100 @@ Note SMTP credentials
 
 - Integrate SMTP on jenkins
 
+![email-ses](https://user-images.githubusercontent.com/101070055/233823028-5c22dad5-2bed-4bb1-bfd3-084f9883d7a5.png)
+
+![jenkins-email-ses](https://user-images.githubusercontent.com/101070055/233823129-cdec80ab-4a76-4a32-8ae4-f242f94914c3.png)
+
+- Add Message pipeline
+
+                    post {
+                        success {
+                            mail to:"Jmcglobal7@gmail.com", subject:"SUCCESS: ${currentBuild.fullDisplayName}", body: "PipeLine build successfully, and all requirement is met."
+                        }
+                        failure {
+                            mail to:"Jmcglobal7@gmail.com", subject:"FAILURE: ${currentBuild.fullDisplayName}", body: "PipeLine failed and all process aborted, kindly check your pipelien and build again"
+                        }
+                    }  
+    
+ 
+- If the build is successfull or fail, email will be sent to notify the process
+
+![success-buid](https://user-images.githubusercontent.com/101070055/233825587-632653ef-9925-49bd-9ed3-d9948eaa067d.png)
+
+- If there is an error
+
+![build-failed](https://user-images.githubusercontent.com/101070055/233825799-a5b8c207-ef27-4a89-a843-50347568337d.png)
 
 
+# All pipeLines
+
+                pipeline {
+                    agent any 
+
+                    tools {
+                        maven "Maven:3.6.3"
+                    }
+
+                    environment {
+                        registrtry = '700930115870.dkr.ecr.us-east-1.amazonaws.com/boot-app'
+                        registryCredentiartl = 'Jenkins-ECR'
+                        dockerImage = ''
+                    }
+
+                    stages {
+                        stage ("Checkout the project") {
+                            steps {
+                                git branch: 'master', url: 'https://github.com/Jmcglobal/Spring-app.git'
+                            }
+                        }
+
+                        stage ("Build the project") {
+                            steps {
+                                sh 'mvn clean package'
+                            }
+                        }
+
+                        stage ("SonarQube Quality code check analysis") {
+                            steps {
+                                script {
+                                withSonarQubeEnv (installationName: 'Sonarqube', credentialsId: 'Token') {
+                                sh 'mvn sonar:sonar'
+                                }
+                                timeout(time: 1, unit: 'HOURS') {
+                                    def qg = waitForQualityGate()
+                                    if (qg.status == 'Ok') {
+                                        success 'Quality gate passed: $(qg.status)'
+                                    } 
+                                }
+                                }
+                            }
+                        }
+
+                        stage ("Build the image") {
+                            steps {
+                                script {
+                                dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                                }
+                            }
+                        }
+
+                        stage ("Push Image to AWS ECR") {
+                            steps {
+                                script {
+                                docker.withRegistry ('http://' + registry, "ecr:us-east-1:" + registryCredential) {
+                                dockerImage.push()
+                                }
+                                }
+                            }
+                        }
+                    }
+
+                    post {
+                        success {
+                            mail to:"Jmcglobal7@gmail.com", subject:"SUCCESS: ${currentBuild.fullDisplayName}", body: "PipeLine build successfully, and all requirement is met."
+                        }
+                        failure {
+                            mail to:"Jmcglobal7@gmail.com", subject:"FAILURE: ${currentBuild.fullDisplayName}", body: "PipeLine failed and all process aborted, kindly check your pipelien and build again"
+                        }
+                    }  
+                }
