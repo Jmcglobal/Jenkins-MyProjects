@@ -63,8 +63,23 @@ Docker is a containerization platform that helps simplify the deployment of soft
 
 ![build-trigger](https://user-images.githubusercontent.com/101070055/234560022-1edc39ae-d8bd-4524-b072-19b47e7ace32.png)
 
+# Configure Github Webhook>
+Configuring Github Webhook will automatically trigger the Pipeline if there is nay changes made on the code.
 
+- On the Github Project repository, click on settings
+- Scroll down, at the left corner, look for and select webhooks
+- click on add webhooks, confirm your password
+- Under PayLoad URL, copy jenkins URL (http://<server-IP>:8080/github-webhook/)
+- Scroll down under 'Which events would you like to trigger this webhook?"
+      click on select individual events, then tick, pull request and pushes events
+- Click on add webhooks
 
-
-
-
+![webhook](https://user-images.githubusercontent.com/101070055/234562655-179506bd-d812-40ab-8fd3-ec0c10707195.png)
+       
+- Build the PipeLine
+          
+![success-build](https://user-images.githubusercontent.com/101070055/234563225-3fc117f1-5aee-4003-a3d5-87896e9c2bc2.png)
+          
+- test the webhook, by making any changes on code repository, if the changes is commited. it will automatically trigger pipeline to poll the repository and rebuild again.
+          
+# Configurr Sonarqube          
