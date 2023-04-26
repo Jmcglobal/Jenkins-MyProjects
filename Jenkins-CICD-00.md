@@ -66,12 +66,12 @@ Docker is a containerization platform that helps simplify the deployment of soft
 # Configure Github Webhook>
 Configuring Github Webhook will automatically trigger the Pipeline if there is nay changes made on the code.
 
-- On the Github Project repository, click on settings
-- Scroll down, at the left corner, look for and select webhooks
-- click on add webhooks, confirm your password
-- Under PayLoad URL, copy jenkins URL (http://<server-IP>:8080/github-webhook/)
-- Scroll down under 'Which events would you like to trigger this webhook?"
-      click on select individual events, then tick, pull request and pushes events
+                    - On the Github Project repository, click on settings
+                    - Scroll down, at the left corner, look for and select webhooks
+                    - click on add webhooks, confirm your password
+                    - Under PayLoad URL, copy jenkins URL (http://<server-IP>:8080/github-webhook/)
+                    - Scroll down under 'Which events would you like to trigger this webhook?"
+                          click on select individual events, then tick, pull request and pushes events
 - Click on add webhooks
 
 ![webhook](https://user-images.githubusercontent.com/101070055/234562655-179506bd-d812-40ab-8fd3-ec0c10707195.png)
@@ -124,3 +124,62 @@ Configuring Github Webhook will automatically trigger the Pipeline if there is n
          Enter token name, select global analysis token type  and expiry date. 
          Click generate
        
+# Integrate Sonarqube in Jenkins
+          
+- Click on manage jenkins under jenkins dashboard 
+          
+          select manage plugin
+          click available plugins
+          Search for SonarQube Scanner
+          click on install without restart
+
+![sonar-scanner](https://user-images.githubusercontent.com/101070055/234578940-77bf205d-d713-4cab-a4ae-5dde1274fd5d.png)
+          
+          Also Search for SSH2 Eazy plugin, and install
+          
+- SSH2 Eaazy Plugin, will enable jenkins to execute  linux command to remote server     
+
+- Click on manage Jenkins, click global tool configuaration  
+          
+          Scroll down to scanner
+          click on add, name it any name, select install automatically, apply and save.
+          
+![sonar-scanner](https://user-images.githubusercontent.com/101070055/234580574-45adb705-d5dd-400b-80a2-9323b69474a5.png)
+
+- Under Mange jenkins, click Systems
+          
+          Scroll down to sonarqube Servers installation,
+          Click add sonarqube
+
+![sonar-server](https://user-images.githubusercontent.com/101070055/234582040-b1f247aa-af79-4cc1-a507-4e0cf26a0099.png)
+
+- Save
+          
+- Add Credentials for sonar scanner
+          
+          Under server authentication token, click on add
+          select secret text under kind
+          paste the token copied from sonarqube under secret
+          Enter any name under ID
+          then save
+          
+          
+                   
+- Click on the PipeLine, select configure
+          
+          On Build Steps, Click on Build Steps, select execute Sonarqube Scanner
+          On Analysis Properties, paste the project key on the space, then save
+          
+![sonar-project-key](https://user-images.githubusercontent.com/101070055/234584342-c702a6dc-5d66-48f6-a6b5-81eaa0dbad10.png)
+
+- Build the PipeLine to run code analysis
+          
+![sonar-success](https://user-images.githubusercontent.com/101070055/234584941-986070cc-0fae-43b5-80b1-89be35d672b1.png)
+
+![sonar-success](https://user-images.githubusercontent.com/101070055/234585151-77be7802-6f3c-48dc-a68c-fee8dcad2765.png)
+
+          
+# Configure Docker Server
+          
+         Sudo apt update -y
+          sudo apt install docker.io
