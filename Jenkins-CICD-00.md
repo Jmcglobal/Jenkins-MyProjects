@@ -51,5 +51,20 @@ Docker is a containerization platform that helps simplify the deployment of soft
 
 ![jenk-dashboard](https://user-images.githubusercontent.com/101070055/234557599-74fe2999-b162-456b-9314-c63e5e6f8e2a.png)
 
-# Step2 Create a Free style job
+
+# Step2 Create PipeLine
+
+- Click on new item, Enter pipeLine name, and select freestle project and scroll down then okay
+- Inside PipeLine configuration, select SCM (source code management) and click Git, configure the remote repository
+
+![Git-configure](https://user-images.githubusercontent.com/101070055/234559991-601ec4c0-7939-4917-8fc8-61940ca35d57.png)
+
+- Select Build Triggers, click on Github Hook trigger for GITScn polling; this will enable the pipeline to trigger automatically, if there is any changes on remote repository. then apply and save.
+
+![build-trigger](https://user-images.githubusercontent.com/101070055/234560022-1edc39ae-d8bd-4524-b072-19b47e7ace32.png)
+
+
+
+
+
 
