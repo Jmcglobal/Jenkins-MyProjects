@@ -176,9 +176,8 @@ Configuring Github Webhook will automatically trigger the Pipeline if there is n
           
 ![sonar-success](https://user-images.githubusercontent.com/101070055/234584941-986070cc-0fae-43b5-80b1-89be35d672b1.png)
 
-![success-build](https://user-images.githubusercontent.com/101070055/234589396-7e97070f-54a4-436f-86c1-5ff9b1d71c2f.png)
-
-         
+![code-passed](https://user-images.githubusercontent.com/101070055/234598718-66eb61fa-015e-4921-b7d6-02a1d6f5c0a8.png)
+        
 # Configure Docker Server
           
          Sudo apt update -y
@@ -219,8 +218,62 @@ Configuring Github Webhook will automatically trigger the Pipeline if there is n
 
 ![ssh](https://user-images.githubusercontent.com/101070055/234597542-b7903b31-f857-4a07-9b40-5b7ec12d6086.png)
 
+- Add Current User to Docker Group to be able to execute docker command without sudo
+          
+          sudo usermod -aG docker ubuntu
+          newgrp docker
+          
 # Integrate Docker Server on Jenkins
           
 - Click on manage jenkins, select System
           
+          Scroll Down to Server Group center,
+          On server group list, click on add
+          Enter Server name, port, username and password of the remote server
+          apply and save
+
+![server-group](https://user-images.githubusercontent.com/101070055/234599886-cf4f618e-ad94-4d59-970b-23b4b24f95a3.png)
+     
+- Add Server List, 
           
+          On cofigure system, select server group
+          Enter Server name
+          and enter server public IP
+          apply and save
+          
+![server-list](https://user-images.githubusercontent.com/101070055/234603781-c468e478-6ea9-4bc4-844f-1ef049c9c93b.png)
+
+- Create a Dockerfile from github/ locally then push to github    
+          FROM nginx
+          COPY . /usr/share/nginx/html
+          
+          save and exit
+          
+- Click on PipeLine, Select configure, to copy all the website content to docker server
+          
+          Under Build Steps, select Execute shell
+          
+          scp -r ./* ubuntu@<docker-Server-IP>:~/Website/
+
+- Click on Build Steps, select remote shell
+          
+          cd /home/ubuntu/website
+          docker build -t website .
+          docke run -d --name Web-Site -p 3000:80 website
+          
+![run-command](https://user-images.githubusercontent.com/101070055/234614782-96274e82-5ef5-4d9d-9a30-b0cdb388ce79.png)
+
+-  save and build the pipeline.   
+          
+If build is successfull, the website should be running on docker server
+          
+![dockr-ruh](https://user-images.githubusercontent.com/101070055/234623184-32f1d9a6-fb7c-4759-bf61-153e938ad2f2.png)
+
+I can reach the website now through port 3000.
+          
+![site-up](https://user-images.githubusercontent.com/101070055/234623774-148f3bdb-91a4-4b59-929b-04e4451af491.png)
+
+# Completed
+          
+   ![CICD-1](https://user-images.githubusercontent.com/101070055/234623954-0d691e3a-518a-470d-ab6e-7af6a854a653.png)
+       
