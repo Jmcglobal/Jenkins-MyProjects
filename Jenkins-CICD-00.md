@@ -176,10 +176,51 @@ Configuring Github Webhook will automatically trigger the Pipeline if there is n
           
 ![sonar-success](https://user-images.githubusercontent.com/101070055/234584941-986070cc-0fae-43b5-80b1-89be35d672b1.png)
 
-![sonar-success](https://user-images.githubusercontent.com/101070055/234585151-77be7802-6f3c-48dc-a68c-fee8dcad2765.png)
+![success-build](https://user-images.githubusercontent.com/101070055/234589396-7e97070f-54a4-436f-86c1-5ff9b1d71c2f.png)
 
-          
+         
 # Configure Docker Server
           
          Sudo apt update -y
           sudo apt install docker.io
+          
+- I will configure Server, and ensure I cann ssh from jenkins to docker server
+          
+- Edit SSH config of docker-server
+          
+          sudo nano /etc/ssh/sshd_config
+          uncomment "PubkeyAuthentication yes"
+          Set PasswordAuthentication yes
+          save and exit
+          restart sshd service (systemctl restart sshd
+
+- Set Docker Server User password ( change to root user mode)
+          
+          sudo su
+          passwd ubuntu
+          New password: <enter any choice> hit enter
+          retype password, hit enter
+
+- On jenkins Server, Switch to root user mode
+          
+          sudo su jenkins
+          ssh ubuntu@<docker-IP>  (it will prompt to enter docker user password) and it will be successfull
+
+- Generate Public and private key
+          
+          ssh-key-gen  (hit enter till end)
+          
+- Copy ssh-key-id with name of the server
+          
+        ssh-copy-id ubuntu@3.80.44.226  
+        Enter docker server password
+        Now, i can ssh from jenkins server to docker server without password prompt
+        ssh ubuntu@<docker-Server-IP>
+
+![ssh](https://user-images.githubusercontent.com/101070055/234597542-b7903b31-f857-4a07-9b40-5b7ec12d6086.png)
+
+# Integrate Docker Server on Jenkins
+          
+- Click on manage jenkins, select System
+          
+          
