@@ -218,10 +218,11 @@ Configuring Github Webhook will automatically trigger the Pipeline if there is n
 
 ![ssh](https://user-images.githubusercontent.com/101070055/234597542-b7903b31-f857-4a07-9b40-5b7ec12d6086.png)
 
-- Add Current User to Docker Group to be able to execute docker command without sudo
+- On docker server add Current User to Docker Group to be able to execute docker command without sudo
           
           sudo usermod -aG docker ubuntu
           newgrp docker
+          mkdir website
           
 # Integrate Docker Server on Jenkins
           
