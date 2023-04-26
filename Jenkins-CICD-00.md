@@ -82,4 +82,45 @@ Configuring Github Webhook will automatically trigger the Pipeline if there is n
           
 - test the webhook, by making any changes on code repository, if the changes is commited. it will automatically trigger pipeline to poll the repository and rebuild again.
           
-# Configurr Sonarqube          
+# Configure Sonarqube   
+
+          sudo apt install unzip          
+          sudo  apt update -y
+          sudo apt install openjdk-17-jre -y
+          wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.9.0.65466.zip
+          unzip sonarqube-9.9.0.65466.zip          
+
+- Start Sonarqube
+          
+          cd sonarqube-9.9.0.65466 && cd bin && cd linux-x86-64 
+          ./sonar.sh start
+- To Access Sonarqube, open port 9000 on inbound rule attached to the sonarqube server.
+          http://<Server-Ip>:9000
+          
+-  Enter default password, and after change the password      
+          
+- Sonarqube dashboard
+          
+![sonar-dash](https://user-images.githubusercontent.com/101070055/234571944-6366debe-04e5-4c66-b257-f4b31114951e.png)
+
+- Setup a project, scroll down click on manually
+          
+![sonar-project](https://user-images.githubusercontent.com/101070055/234572691-05512182-e7d4-4802-871e-c1a80a1c03d8.png)
+
+- Enter information and project name, click setup button
+          
+- Select Jenkins to configure analysis 
+          
+          Select Github
+          Click configure analysis, and click continue to step 3
+          Select other ( my project is just html, if is soring-boot, maven will be selected)
+- Copy project key and click finish tutorial
+          
+ ![project-key](https://user-images.githubusercontent.com/101070055/234575691-d6fde9d5-366e-41f3-84df-9a7578247107.png)
+          
+-Create a token
+          
+         Go to admin account, click on security
+         Enter token name, select global analysis token type  and expiry date. 
+         Click generate
+       
