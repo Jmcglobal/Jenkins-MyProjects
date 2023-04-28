@@ -24,7 +24,7 @@ A CICD Pipeline typically consists of five stages: Build, Test, Deploy, Monitor,
 
 5. Release: The Release Stage is where the application is made available to the public or to a specified user group. This could involve updating the application in an app store or website, or pushing a new version out to a customer base.
 
-# Installing jenkins server
+### Installing jenkins server
 
 There are more than ways of which i can deploy jenkins server.
 
@@ -33,7 +33,7 @@ There are more than ways of which i can deploy jenkins server.
 
 In all of this project, I will be using local installation of jenkins server on AWS EC2 Uvuntu instance
 
-# prerequisites
+### prerequisites
 
 - Running Windows/Linux Machine, I am personally using AWS EC2 Ubuntu Instance
 - Running Java Environment
@@ -55,7 +55,7 @@ Download jenkins required package and its dependencies with curl command
 
 Jenkins Default Port = 8080
 
-# jenkins Dashboard Overview
+## jenkins Dashboard Overview
 
 ![over-view-2](https://user-images.githubusercontent.com/101070055/232629066-d9458cfb-38d8-44cc-b56c-5776debec922.png)
 
