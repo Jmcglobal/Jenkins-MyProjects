@@ -144,7 +144,7 @@ Configuring Github Webhook will automatically trigger the Pipeline if there is n
           Scroll down to scanner
           click on add, name it any name, select install automatically, apply and save.
           
-![sonar-scanner](https://user-images.githubusercontent.com/101070055/234580574-45adb705-d5dd-400b-80a2-9323b69474a5.png)
+![sonar-install](https://user-images.githubusercontent.com/101070055/235926276-1d4280c3-5a4c-402d-a43c-b3f7e253bd47.png)
 
 - Under Mange jenkins, click Systems
           
