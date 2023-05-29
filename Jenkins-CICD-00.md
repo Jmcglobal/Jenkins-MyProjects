@@ -44,7 +44,7 @@ Docker is a containerization platform that helps simplify the deployment of soft
 
             Access jenkins on http://<Server-Public-IP>:8080
             
- - Follow the guide to get defauolt password, then select install suggested plugins     
+ - Follow the guide to get default password, then select install suggested plugins     
  - Create First Admin user access, by entering username, password , name and email.
 
  - Jenkins dashboard
@@ -207,7 +207,7 @@ Configuring Github Webhook will automatically trigger the Pipeline if there is n
 
 - Generate Public and private key
           
-          ssh-key-gen  (hit enter till end)
+          ssh-keygen  (hit enter till end)
           
 - Copy ssh-key-id with name of the server
           
