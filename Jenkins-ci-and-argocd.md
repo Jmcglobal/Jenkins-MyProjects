@@ -31,3 +31,14 @@ End-to-end Jenkins pipeline for a Java application using Git, SonarQube, Docker,
 - How to create EKS cluster
 
         https://github.com/Jmcglobal/Kubernetes-MyProject/tree/master/EKS
+
+#### jenkins - Sonarqube server 
+
+![jenkins-server](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/4675f921-5e51-4a1a-80e9-644ca2071d93)
+
+#### Argocd Setup on kubernetes cluster
+
+- How to setup argocd on kubernetes cluster
+
+#### Minikube cluster
+
