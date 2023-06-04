@@ -349,7 +349,19 @@ I simplified this process without adding complex configuration on jenkins, by us
               }
             }
 
-    
+   ### RUN THE PIPELINE 
+   
+Before runninmg running the jenkins ci script here is the current state of the argocd server and kubernetes cluster 
+
+![argocd-state](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/44d3f233-f10d-4020-97cd-4c64f62bc534)
+
+![cluster-state](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/a3593ce9-62cf-4cc2-a073-948dd18a7874)
+   
+### Build now
+
+![buikd-pipeline](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/81489cf7-7e34-4df6-b1f2-38fab35554f3)
+
+Click on build now
     
     
     
