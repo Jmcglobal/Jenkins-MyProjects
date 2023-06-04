@@ -192,7 +192,61 @@ Therefore, select pipeline script from SCM
 Enter default password > change password  >> then access sonar home page
   
           admin as passowrd and admin as user
+          
+![sonarqube-homepage](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/2224fedc-7234-4e11-a17c-c2dd6ed13984)
     
+- Configure Token, to enable jenkins authentication to run code quality check
+
+        Go to admin account, click on security then create token
+        Copy the token, then configure sonar credentials on jenkins
+
+![jenkins-sonar-token](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/3dc50bec-b446-4a95-b70c-c40846487c58)
+
+#### ADD SONAR CREDENTIALS ON JENKINS
+
+       On jenkins home page, click on manage jenkins >> credentails >> system >> global credentails >> click add credential
+       Under kind select secret text
+       paste the token
+       enter ID name and save
+
+![configure-crede](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/23b61287-9e94-44bb-b8c5-0f47fac3c715)
+
+
+#### Install Docker and add permisions for jenkins and ubuntu user
+
+-  cange directory to root , exit from sonarqube user terminal
+
+      apt install docker.io -y
+      usermod -aG docker jenkins
+      usermod -aG docker ubuntu
+      newgrp docker
+      systemctl restart docker
+
+-  Adding both the jenkins and ubuntu to docker group, will enable them to execute docker command without asking for sudo permission
+
+#### Add docker credentials
+
+       On jenkins home page, click on manage jenkins >> credentails >> system >> global credentails >> click add credential
+       under kind, select username and password
+       enter your dockerhub username
+       enter password
+       and enter ID name
+
+![docker-credential](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/2e2a3c45-10cd-436c-bac1-c2a72da875ae)
+
+- Add GitHub credentials
+
+       click add credentials,
+       under kind select  secret text
+       enter your github token as your secret
+       and enter ID name
+       
+To get github access token, click click settings from your github account
+scroll down to developer settings
+
+![github-cred](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/87e0189f-d6ab-4408-bce4-bb9c4edebae2)
+
+
 
 
 
