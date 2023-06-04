@@ -262,93 +262,93 @@ I simplified this process without adding complex configuration on jenkins, by us
 
 ### Stages on the JenkinsFile
 
-pipeline {
-  agent {
-    docker {
-      image 'jmcglobal/docker-agent-maven:v1'
-      args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
-    }
-  }
-
-  stages {
-    stage('Checkout') {
-      steps {
-        sh 'echo passed'
-        //git branch: 'master', url: 'https://github.com/Jmcglobal/java-app.git'
-      }
-    }
-
-    stage('Build and Test') {
-      steps {
-        // build the project and create a JAR file
-        sh 'cd spring-boot-java && mvn clean package'
-      }
-    }
-    
-    
-    stage('Static Code Analysis') {
-      environment {
-        SONAR_URL = "http://3.231.207.115:9000"  // sonar-server which is running on same server jenkins server
-      }
-      steps {
-        withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
-          sh 'cd spring-boot-java && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+      pipeline {
+        agent {
+          docker {
+            image 'jmcglobal/docker-agent-maven:v1'
+            args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
+          }
         }
-      }
-    }    
-    
-    
-    stage('Build and Push Docker Image') {
-      environment {
-        DOCKER_IMAGE = "jmcglobal/java-app:${BUILD_NUMBER}"
-        // DOCKERFILE_LOCATION = "spring-boot-java/Dockerfile"
-        REGISTRY_CREDENTIALS = credentials('docker-cred')
-      }
-      steps {
-        script {
-            sh 'cd spring-boot-java && docker build -t ${DOCKER_IMAGE} .'
-            def dockerImage = docker.image("${DOCKER_IMAGE}")
-            docker.withRegistry('https://index.docker.io/v1/', "docker-cred") {
-                dockerImage.push()
+
+        stages {
+          stage('Checkout') {
+            steps {
+              sh 'echo passed'
+              //git branch: 'master', url: 'https://github.com/Jmcglobal/java-app.git'
             }
-        }
-      }
-    }    
+          }
+
+          stage('Build and Test') {
+            steps {
+              // build the project and create a JAR file
+              sh 'cd spring-boot-java && mvn clean package'
+            }
+          }
+
+    
+          stage('Static Code Analysis') {
+            environment {
+              SONAR_URL = "http://3.231.207.115:9000"  // sonar-server which is running on same server jenkins server
+            }
+            steps {
+              withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
+                sh 'cd spring-boot-java && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+              }
+            }
+          }    
+    
+    
+          stage('Build and Push Docker Image') {
+            environment {
+              DOCKER_IMAGE = "jmcglobal/java-app:${BUILD_NUMBER}"
+              // DOCKERFILE_LOCATION = "spring-boot-java/Dockerfile"
+              REGISTRY_CREDENTIALS = credentials('docker-cred')
+            }
+            steps {
+              script {
+                  sh 'cd spring-boot-java && docker build -t ${DOCKER_IMAGE} .'
+                  def dockerImage = docker.image("${DOCKER_IMAGE}")
+                  docker.withRegistry('https://index.docker.io/v1/', "docker-cred") {
+                      dockerImage.push()
+                  }
+              }
+            }
+          }    
     
 
 - Below is the script i used to edit deployment yaml file, to latest build tag, and push it to argocd github repository automatically. The idea is that, After the building and pushing the application image to dockerhub, it will automatically update the deployment yaml file to latest version of the build tag, and push it to argocd repository, then it will be automatically deployed to kubernetes clusters, without manual process. And there is webhook trigger, that will trigger the jenkins pipeline to run automatically, whenever the development teams commit changes on the project repository
 
-    stage('Update Deployment File') {
-        environment {
-            GIT_REPO_NAME = "argocd-java-app"
-            GIT_USER_NAME = "Jmcglobal"
-        }
-        steps {
-            withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
-                sh '''
-                    git config user.email "mmadubugwuchibuife@gmail.com"
-                    git config user.name "Jmcglobal"
-                    BUILD_NUMBER=${BUILD_NUMBER}
-                    sed -i '19 s/.*/        image: jmcglobal\/java-app:${BUILD_NUMBER}/' spring-boot-yaml/deployment.yml
-                    if [ ! -d "argocd-java-app/java-manifest" ]; then mkdir -p argocd-java-app/java-manifest; fi
-                    cd argocd-java-app && git init
-                    git remote add origin https://github.com/Jmcglobal/argocd-java-app.git
-                    git config pull.rebase true && git pull origin master
-                    cd java-manifest && rm -rf deployment.yml service.yml
-                    if [[ ! -f "deployment.yaml" && ! -f "service.yaml" ]]; then cp -r ../../spring-boot-yaml/* . ; fi
-                    cd .. 
-                    git add .
-                    git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-                    git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:master
-                    rm -rf .git
-                    cd java-manifest && rm -rf deployment.yml service.yml                   
-                '''
+                stage('Update Deployment File') {
+                    environment {
+                        GIT_REPO_NAME = "argocd-java-app"
+                        GIT_USER_NAME = "Jmcglobal"
+                    }
+                    steps {
+                        withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+                            sh '''
+                                git config user.email "mmadubugwuchibuife@gmail.com"
+                                git config user.name "Jmcglobal"
+                                BUILD_NUMBER=${BUILD_NUMBER}
+                                sed -i '19 s/.*/        image: jmcglobal\/java-app:${BUILD_NUMBER}/' spring-boot-yaml/deployment.yml
+                                if [ ! -d "argocd-java-app/java-manifest" ]; then mkdir -p argocd-java-app/java-manifest; fi
+                                cd argocd-java-app && git init
+                                git remote add origin https://github.com/Jmcglobal/argocd-java-app.git
+                                git config pull.rebase true && git pull origin master
+                                cd java-manifest && rm -rf deployment.yml service.yml
+                                if [[ ! -f "deployment.yaml" && ! -f "service.yaml" ]]; then cp -r ../../spring-boot-yaml/* . ; fi
+                                cd .. 
+                                git add .
+                                git commit -m "Update deployment image to version ${BUILD_NUMBER}"
+                                git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:master
+                                rm -rf .git
+                                cd java-manifest && rm -rf deployment.yml service.yml                   
+                            '''
+                        }
+                    }
+                }
+              }
             }
-        }
-    }
-  }
-}
-    
+
     
     
     
