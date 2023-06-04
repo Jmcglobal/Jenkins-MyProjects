@@ -149,7 +149,13 @@ It is reusable at any time and can be shared
 
 Therefore, select pipeline script from SCM
 
-- i also make use of docker as an agent, which is an image that containes maven and docker, so that all the script will run on the docker container, instead of running directly on the jenkins server. After running the pipeline successfully, it will remove the container, therefore there won't be any heavy load on the server. I have wrote the dockerfile and build the image, and it is available on dockerhub for many use cases.
+![scm-pipeline](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/b9a23ef6-7ec3-4998-a9bb-55c4568ff02f)
+
+![argocd-scm-pipeline](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/775007aa-83f2-4584-9f49-70cd4b0db759)
+
+- Apply and save
+
+- i make use of docker agent, which is an image that containes maven and docker environment and dependecies to run the script, so that all the script will run on the docker container, instead of running directly on the jenkins server. After running the pipeline successfully, it will remove the container, therefore there won't be any heavy load on the server. I have wrote the dockerfile and build the image, and it is available on dockerhub for many use cases.
 
 #### Install plugins
 
@@ -241,13 +247,111 @@ Enter default password > change password  >> then access sonar home page
        enter your github token as your secret
        and enter ID name
        
-To get github access token, click click settings from your github account
-scroll down to developer settings
+- To get github access token, click click settings from your github account
+- scroll down to developer settings, click on it
+- Click on personal access token, and select token classic
+- then click generate new token
 
 ![github-cred](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/87e0189f-d6ab-4408-bce4-bb9c4edebae2)
 
+![all-credentials](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/55dbb03c-b67f-41d7-b9bc-38a6f55d8278)
 
+I simplified this process without adding complex configuration on jenkins, by using docker agent and JenkinsFile.
 
+- On the jenkins file, i also make use of environment variables to simplified the pipeline script
 
+### Stages on the JenkinsFile
 
+pipeline {
+  agent {
+    docker {
+      image 'jmcglobal/docker-agent-maven:v1'
+      args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
+    }
+  }
 
+  stages {
+    stage('Checkout') {
+      steps {
+        sh 'echo passed'
+        //git branch: 'master', url: 'https://github.com/Jmcglobal/java-app.git'
+      }
+    }
+
+    stage('Build and Test') {
+      steps {
+        // build the project and create a JAR file
+        sh 'cd spring-boot-java && mvn clean package'
+      }
+    }
+    
+    
+    stage('Static Code Analysis') {
+      environment {
+        SONAR_URL = "http://3.231.207.115:9000"  // sonar-server which is running on same server jenkins server
+      }
+      steps {
+        withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
+          sh 'cd spring-boot-java && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+        }
+      }
+    }    
+    
+    
+    stage('Build and Push Docker Image') {
+      environment {
+        DOCKER_IMAGE = "jmcglobal/java-app:${BUILD_NUMBER}"
+        // DOCKERFILE_LOCATION = "spring-boot-java/Dockerfile"
+        REGISTRY_CREDENTIALS = credentials('docker-cred')
+      }
+      steps {
+        script {
+            sh 'cd spring-boot-java && docker build -t ${DOCKER_IMAGE} .'
+            def dockerImage = docker.image("${DOCKER_IMAGE}")
+            docker.withRegistry('https://index.docker.io/v1/', "docker-cred") {
+                dockerImage.push()
+            }
+        }
+      }
+    }    
+    
+
+- Below is the script i used to edit deployment yaml file, to latest build tag, and push it to argocd github repository automatically. The idea is that, After the building and pushing the application image to dockerhub, it will automatically update the deployment yaml file to latest version of the build tag, and push it to argocd repository, then it will be automatically deployed to kubernetes clusters, without manual process. And there is webhook trigger, that will trigger the jenkins pipeline to run automatically, whenever the development teams commit changes on the project repository
+
+    stage('Update Deployment File') {
+        environment {
+            GIT_REPO_NAME = "argocd-java-app"
+            GIT_USER_NAME = "Jmcglobal"
+        }
+        steps {
+            withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+                sh '''
+                    git config user.email "mmadubugwuchibuife@gmail.com"
+                    git config user.name "Jmcglobal"
+                    BUILD_NUMBER=${BUILD_NUMBER}
+                    sed -i '19 s/.*/        image: jmcglobal\/java-app:${BUILD_NUMBER}/' spring-boot-yaml/deployment.yml
+                    if [ ! -d "argocd-java-app/java-manifest" ]; then mkdir -p argocd-java-app/java-manifest; fi
+                    cd argocd-java-app && git init
+                    git remote add origin https://github.com/Jmcglobal/argocd-java-app.git
+                    git config pull.rebase true && git pull origin master
+                    cd java-manifest && rm -rf deployment.yml service.yml
+                    if [[ ! -f "deployment.yaml" && ! -f "service.yaml" ]]; then cp -r ../../spring-boot-yaml/* . ; fi
+                    cd .. 
+                    git add .
+                    git commit -m "Update deployment image to version ${BUILD_NUMBER}"
+                    git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:master
+                    rm -rf .git
+                    cd java-manifest && rm -rf deployment.yml service.yml                   
+                '''
+            }
+        }
+    }
+  }
+}
+    
+    
+    
+    
+    
+    
+    
