@@ -89,12 +89,12 @@ I have written all the script on JenkinsFile, follow the guildeline above and be
 
 - Install Java
 
- sudo apt update -y
- sudo apt install openjdk-11-jre
+           sudo apt update -y
+           sudo apt install openjdk-11-jre
  
 - verify java is installed
 
-java --version
+            java --version
 
 ![java-version](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/d35554f5-8399-4742-b336-432f950ee502)
 
@@ -106,14 +106,14 @@ java --version
                  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
                  /etc/apt/sources.list.d/jenkins.list > /dev/null
 
-    sudo apt-get update
-    sudo apt-get install jenkins 
+          sudo apt-get update
+          sudo apt-get install jenkins 
     
 - Once jenkins is installed, it will start automatically on port 8080, therefore to reach jenkins UI, i have allow port 8080 on EC2 security group, to  be reachable from anywhere. 
 
 - To access jenkins UI
 
-      http://<EC2-instance-public-IP>:8080
+          http://<EC2-instance-public-IP>:8080
       
 ![jenkins-default-home-page](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/4da46fe0-9a61-4e51-9c76-4fe7d0108945)
 
@@ -155,43 +155,43 @@ Therefore, select pipeline script from SCM
 
 - On jenkins dashboard, click on manage jenkins, click on plugins, and select available plugins, the search and install the following plugins
 
-    Docker pipeline plugin
-    SonarQube Scanner plugin
+          Docker pipeline plugin
+          SonarQube Scanner plugin
 
 #### Install Sonar server
 
 - Configure seperate user for sonarqube
 
-    sudo su -
-    adduser sonarqube
-    Enter password, Confirm password, press enter for other parameters till done
-    apt install unzip -y
+            sudo su -
+            adduser sonarqube
+            Enter password, Confirm password, press enter for other parameters till done
+            apt install unzip -y
 
-    su - sonarqube   >> Switch to sonarqube user
+            su - sonarqube   >> Switch to sonarqube user
     
 - Install Sonar server on EC2 Instance
 
-    wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.4.0.54424.zip
-    unzip *
-    
+            wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.4.0.54424.zip
+            unzip *
+
 - Grant permission and chnage sonarqube ownership
 
-    chmod -R 755 /home/sonarqube/sonarqube-9.4.0.54424
-    chown -R sonarqube:sonarqube /home/sonarqube/sonarqube-9.4.0.54424
+            chmod -R 755 /home/sonarqube/sonarqube-9.4.0.54424
+            chown -R sonarqube:sonarqube /home/sonarqube/sonarqube-9.4.0.54424
 
 - Start Sonar Server
+  
+            cd sonarqube-9.4.0.54424
+            cd bin/linux-x86
+            ./sonar.sh start
 
-    cd sonarqube-9.4.0.54424
-    cd bin/linux-x86
-    ./sonar.sh start
-    
 - Access the sonarqube server with 
 
-    http://<server-IP>:9000
+          http://<server-IP>:9000
 
 Enter default password > change password  >> then access sonar home page
   
-  admin as passowrd and admin as user
+          admin as passowrd and admin as user
     
 
 
