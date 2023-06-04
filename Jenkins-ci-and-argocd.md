@@ -66,7 +66,7 @@ I have written all the script on JenkinsFile, follow the guildeline above and be
 
 - Whenever a development team uplaods a code to github project repo, it will trigger a jenkins  pipeline to do the following:
 
-        - Run a unit testing with maven, building and compiling and testing the codes, if suuccessfull and no error,
+        - Run a unit testing with maven, building and compiling and testing the codes, if successfull and no error,
         - Run code quality analysis on sonarqube server,
         - If code analysis check is passed,
         - Copy the application  artifact and build the application image using docker
@@ -149,7 +149,50 @@ It is reusable at any time and can be shared
 
 Therefore, select pipeline script from SCM
 
-- i also make us of docker agent
+- i also make use of docker as an agent, which is an image that containes maven and docker, so that all the script will run on the docker container, instead of running directly on the jenkins server. After running the pipeline successfully, it will remove the container, therefore there won't be any heavy load on the server. I have wrote the dockerfile and build the image, and it is available on dockerhub for many use cases.
+
+#### Install plugins
+
+- On jenkins dashboard, click on manage jenkins, click on plugins, and select available plugins, the search and install the following plugins
+
+    Docker pipeline plugin
+    SonarQube Scanner plugin
+
+#### Install Sonar server
+
+- Configure seperate user for sonarqube
+
+    sudo su -
+    adduser sonarqube
+    Enter password, Confirm password, press enter for other parameters till done
+    apt install unzip -y
+
+    su - sonarqube   >> Switch to sonarqube user
+    
+- Install Sonar server on EC2 Instance
+
+    wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.4.0.54424.zip
+    unzip *
+    
+- Grant permission and chnage sonarqube ownership
+
+    chmod -R 755 /home/sonarqube/sonarqube-9.4.0.54424
+    chown -R sonarqube:sonarqube /home/sonarqube/sonarqube-9.4.0.54424
+
+- Start Sonar Server
+
+    cd sonarqube-9.4.0.54424
+    cd bin/linux-x86
+    ./sonar.sh start
+    
+- Access the sonarqube server with 
+
+    http://<server-IP>:9000
+
+Enter default password > change password  >> then access sonar home page
+  
+  admin as passowrd and admin as user
+    
 
 
 
