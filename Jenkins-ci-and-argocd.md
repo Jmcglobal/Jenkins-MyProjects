@@ -325,9 +325,7 @@ I simplified this process without adding complex configuration on jenkins, by us
                     }
                     steps {
                         withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
-                            sh ''' 
-                                git config user.email "Mmadubugwuchibuife@gmail.com"
-                                git config user.name "Jmcglobal"                 
+                            sh '''                          
                                 BUILD_NUMBER=${BUILD_NUMBER}
                                 sed -i '19 s/.*/        image: jmcglobal\\/java-app:'$BUILD_NUMBER'/' spring-boot-yaml/deployment.yml
                                 if [ ! -d "argocd-java-app/java-manifest" ]; then mkdir -p argocd-java-app/java-manifest; fi
@@ -400,10 +398,18 @@ Click on build now
 
 - In argocd, i can as well add external clusters, for example, i can add many development clusters and production clusters to argocd, and enable automatic synchronization on development cluster, while production cluster can be manual sync, after client have confirmed all features of the application is functional.    
 
-- How to configure email trigger, It will send an email notification to devops team, if the pipeline script is successfull or failed, with a build tag number.
+Email trigger will send an email notification to devops team, if the pipeline script is successfull or failed, with a build tag number.
+
+- How to configure email trigger
 
 https://github.com/Jmcglobal/Jenkins-MyProjects/blob/master/Jenkins-CICD-Pipeline-script.md
        
-       
+##### Ultimate Overview of the project
+
+![ultimate-jenkins-argocd](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/be1bc9fe-5a1e-42a9-8cbf-654c9a1e3f64)
+
+- If there is any question, do >>>>>>>>>>>>>>>>>>
+- Reach out to: mmadubugwuchibuife@gmail.com
+
        
        
