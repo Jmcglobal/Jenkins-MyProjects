@@ -325,19 +325,24 @@ I simplified this process without adding complex configuration on jenkins, by us
                     }
                     steps {
                         withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
-                            sh '''
-                                git config user.email "mmadubugwuchibuife@gmail.com"
-                                git config user.name "Mmadubugwu Chibuife"
+                            sh ''' 
+                                git config user.email "Mmadubugwuchibuife@gmail.com"
+                                git config user.name "Jmcglobal"                 
                                 BUILD_NUMBER=${BUILD_NUMBER}
-                                sed -i '19 s/.*/        image: jmcglobal\\/java-app:${BUILD_NUMBER}/' spring-boot-yaml/deployment.yml
+                                sed -i '19 s/.*/        image: jmcglobal\\/java-app:'$BUILD_NUMBER'/' spring-boot-yaml/deployment.yml
                                 if [ ! -d "argocd-java-app/java-manifest" ]; then mkdir -p argocd-java-app/java-manifest; fi
-                                cd argocd-java-app && git init
+                                cd argocd-java-app 
+                                git config --global --add safe.directory /var/lib/jenkins/workspace/jenkins-argocd/argocd-java-app
+                                rm -rf .git && git init
                                 git remote add origin https://github.com/Jmcglobal/argocd-java-app.git
+                                rm -rf java-manifest
                                 git config pull.rebase true && git pull origin master
                                 cd java-manifest && rm -rf deployment.yml service.yml
-                                if [[ ! -f "deployment.yaml" && ! -f "service.yaml" ]]; then cp -r ../../spring-boot-yaml/* . ; fi
+                                if [ ! -f "deployment.yaml" ] && [ ! -f "service.yaml" ]; then cp -r ../../spring-boot-yaml/* .; fi
                                 cd .. 
                                 git add .
+                                git config user.email "mmadubugwuchibuife@gmail.com"
+                                git config user.name "Mmadubugwu Chibuife"
                                 git commit -m "Update deployment image to version ${BUILD_NUMBER}"
                                 git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:master
                                 rm -rf .git
@@ -349,9 +354,11 @@ I simplified this process without adding complex configuration on jenkins, by us
               }
             }
 
+- Deveopers can focused on coding and committing their work on central project repo, jenkins pipeline will be triggered, and run the testing and all required stages, then then argocd will deployed the software to kubernetes cluster, and anyone in the team can test the application progress and feature. With the script above, after all the required stages and testing have completed, it will pull and merge, update version tag, commit and also push it back to argocd repo server. There wont be any error 
+
    ### RUN THE PIPELINE 
    
-Before runninmg running the jenkins ci script here is the current state of the argocd server and kubernetes cluster 
+Before running the jenkins ci script here is the current state of the argocd server and kubernetes cluster 
 
 ![argocd-state](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/44d3f233-f10d-4020-97cd-4c64f62bc534)
 
@@ -363,7 +370,40 @@ Before runninmg running the jenkins ci script here is the current state of the a
 
 Click on build now
     
+#### pipeline successfully completed
+
+![building-argocd](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/996be238-70ad-4df5-90f5-b59b7f1a96f1)
+
+#### Quality code checked passed    
     
-    
-    
-    
+![quality-check-passed](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/68a30df2-002e-4e2d-b875-fe7a4eeae79b)
+
+#### Automatically pushed image to dockerhub
+
+![images-pushed-to-docker](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/3c8f17bb-3556-42b1-8e52-e2a486f66211)
+
+#### Automatically synchronized and applied to kubernetes clusters
+
+![automatically-sync-repo](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/e6609882-0e93-4712-8a0c-85e928a94562)
+
+#### Application running on kubernetes cluster and reachable from outside world
+
+![kubernetes-synchronized](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/e5d691ed-b4ea-470d-b5c1-92a24316d95a)
+
+        http://<node-ip>:30446
+
+![application-view](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/9f306955-1de2-41f9-bdfb-4232ff4daa7a)
+
+- I can deployed ingress controller, and configure application ingress rule.
+
+- Deploy ELK Stack, Grafana, and prometheus for log analysis, alert and resource visualisation 
+
+- In argocd, i can as well add external clusters, for example, i can add many development clusters and production clusters to argocd, and enable automatic synchronization on development cluster, while production cluster can be manual sync, after client have confirmed all features of the application is functional.    
+
+- How to configure email trigger, It will send an email notification to devops team, if the pipeline script is successfull or failed, with a build tag number.
+
+https://github.com/Jmcglobal/Jenkins-MyProjects/blob/master/Jenkins-CICD-Pipeline-script.md
+       
+       
+       
+       
