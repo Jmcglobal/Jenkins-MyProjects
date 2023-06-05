@@ -327,9 +327,9 @@ I simplified this process without adding complex configuration on jenkins, by us
                         withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                             sh '''
                                 git config user.email "mmadubugwuchibuife@gmail.com"
-                                git config user.name "Jmcglobal"
+                                git config user.name "Mmadubugwu Chibuife"
                                 BUILD_NUMBER=${BUILD_NUMBER}
-                                sed -i '19 s/.*/        image: jmcglobal\/java-app:${BUILD_NUMBER}/' spring-boot-yaml/deployment.yml
+                                sed -i '19 s/.*/        image: jmcglobal\\/java-app:${BUILD_NUMBER}/' spring-boot-yaml/deployment.yml
                                 if [ ! -d "argocd-java-app/java-manifest" ]; then mkdir -p argocd-java-app/java-manifest; fi
                                 cd argocd-java-app && git init
                                 git remote add origin https://github.com/Jmcglobal/argocd-java-app.git
