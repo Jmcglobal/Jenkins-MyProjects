@@ -1,6 +1,6 @@
 # JENKINS CI AND ARGOCD
 
-![linkedn-content-1](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/eab6f7f9-9d98-4811-a840-51f0b107a814)
+![ultimate-jenkins-argocd](https://github.com/Jmcglobal/Jenkins-MyProjects/assets/101070055/f498c513-cab6-49e3-bd09-5fdc075edb41)
 
 End-to-end Jenkins pipeline for a Java application using Git, SonarQube, Docker, Argocd and Kubernetes
 
