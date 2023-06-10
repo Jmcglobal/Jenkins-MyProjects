@@ -352,7 +352,7 @@ I simplified this process without adding complex configuration on jenkins, by us
               }
             }
 
-- Deveopers can focused on coding and committing their work on central project repo, jenkins pipeline will be triggered, and run the testing and all required stages, then then argocd will deployed the software to kubernetes cluster, and anyone in the team can test the application progress and feature. With the script above, after all the required stages and testing have completed, it will pull and merge, update version tag, commit and also push it back to argocd repo server. There wont be any error 
+- Deveopers can focused on coding and committing their work to the central project repo, jenkins pipeline will be triggered, and run the testing and all required stages, then the argocd will deployed the software to kubernetes cluster, and anyone in the team can test the application progress and feature. With the script above, after all the required stages and testing have completed, it will pull and merge, update version tag, commit and also push it back to argocd repo server. There won't be any error 
 
    ### RUN THE PIPELINE 
    
